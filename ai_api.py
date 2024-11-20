@@ -25,24 +25,6 @@ DIFFICULTIES = {
             Now, rewrite the provided passage adhering strictly to the guidelines above.
             """
     },
-    "medium": {
-        "temperature": 0.7,
-        "prompt": """
-            You are an AI, that is part of a game, tasked with creating a fake passage based on a provided excerpt. 
-            Your goal is to write a new passage about the same topic as the original one:
-            The player chose the following difficulty: medium
-            - mimic Wikipedia's formal style.
-            - Coherence and proper structure.
-            - It should contain obvious false information.
-            - The difficulty should determine how obvious and stupid the fake one is to spot.
-    
-            Important:
-            - The rewritten passage **must not exceed the word or character count** of the original excerpt.
-            - Prioritize concise phrasing and efficient language while maintaining clarity and formal tone.
-    
-            Now, rewrite the provided passage adhering strictly to the guidelines above.
-            """
-    },
     "hard": {
         "temperature": 0.5,
         "prompt": """
