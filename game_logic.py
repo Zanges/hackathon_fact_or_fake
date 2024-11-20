@@ -5,8 +5,16 @@ from colorama import Fore, Style, init
 from ai_api import get_fake_passage
 from crashes import wants_crash, choose_crash
 from player import Player
-from pretty_print import header, display_player_scores_horizontally, print_two_paragraphs_side_by_side, closing_screen, final, get_player_answer
+from pretty_print import (
+    header,
+    display_player_scores_horizontally,
+    print_two_paragraphs_side_by_side,
+    closing_screen,
+    final,
+    get_player_answer,
+)
 from request_wiki_categories import get_random_valid_title, get_article_content
+from utils import get_terminal_width
 from validation import get_player_number, get_rounds_number, get_player_name
 
 init(autoreset=True)
@@ -14,7 +22,9 @@ init(autoreset=True)
 MAX_RETRIES = 3
 
 
-def run_question(fake_passage, passage, round_str, players):
+def run_question(
+    fake_passage: str, passage: str, round_str: str, players: dict[str, Player]
+) -> int:
     """Runs a single question round where players identify the fake passage."""
     header()
     print(round_str)
@@ -30,7 +40,11 @@ def run_question(fake_passage, passage, round_str, players):
         shortened_passages.append(". ".join(sentences[:6]) + ".")
 
     print_two_paragraphs_side_by_side(
-        "Paragraph 1", shortened_passages[0], "Paragraph 2", shortened_passages[1]
+        "Paragraph 1",
+        shortened_passages[0],
+        "Paragraph 2",
+        shortened_passages[1],
+        get_terminal_width(),
     )
     print()
 
@@ -54,7 +68,13 @@ def run_question(fake_passage, passage, round_str, players):
             print(Fore.RED + "Invalid input. Please enter a number (1 or 2)")
 
 
-def run_round(difficulty, category, round_str, players, crash=False) -> int:
+def run_round(
+    difficulty: str,
+    category: str,
+    round_str: str,
+    players: dict[str, Player],
+    crash: bool = False,
+) -> int:
     """Executes a single round of the game, fetching article content and running questions."""
     success = False
     tries = 0
@@ -82,7 +102,7 @@ def run_round(difficulty, category, round_str, players, crash=False) -> int:
     return run_question(fake_passage, article_content, round_str, players)
 
 
-def run_game(difficulty, category) -> None:
+def run_game(difficulty: str, category: str) -> None:
     """Manages the entire game, iterating through rounds and updating player scores."""
     total_players = get_player_number()
     total_rounds = get_rounds_number()
@@ -100,11 +120,12 @@ def run_game(difficulty, category) -> None:
 
             round_str = Fore.BLUE + f"   Round: {game_round}/{total_rounds}"
             round_str += (
-                current_player.color + f"  ──── This is {current_player.name}'s turn ────  "
+                current_player.color
+                + f"  ──── This is {current_player.name}'s turn ────  "
             )
             round_str += Fore.BLUE + f"Score: {current_player.score}"
             round_str_len = len(round_str.replace(Fore.BLUE, "").replace(Fore.RED, ""))
-            seperator =  "─" * (round_str_len + 3)
+            seperator = "─" * (round_str_len + 3)
             round_str += "\n" + seperator
 
             if crash:
@@ -129,7 +150,6 @@ def run_game(difficulty, category) -> None:
 
             current_player.update_score(score)
 
-    
     final(players)
     input("Press Enter to continue!")
     closing_screen()

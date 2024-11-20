@@ -8,7 +8,9 @@ init()
 PODIUM_COLOR = Fore.YELLOW
 
 
-def print_paragraph_with_linebreaks(paragraph: str, line_length: int = 80, indent: int = 0) -> None:
+def print_paragraph_with_linebreaks(
+    paragraph: str, line_length: int = 80, indent: int = 0
+) -> None:
     """
     Print a paragraph with line breaks to ensure that no line exceeds the specified line length.
     The paragraph is indented by the specified number of spaces.
@@ -37,7 +39,14 @@ def print_paragraph_with_linebreaks(paragraph: str, line_length: int = 80, inden
     print()
 
 
-def print_two_paragraphs_side_by_side(heading1: str, paragraph1: str, heading2: str, paragraph2: str, line_length: int = 200, separator: str = "  │  ") -> None:
+def print_two_paragraphs_side_by_side(
+    heading1: str,
+    paragraph1: str,
+    heading2: str,
+    paragraph2: str,
+    line_length: int = 200,
+    separator: str = "  │  ",
+) -> None:
     """
     Print two paragraphs side by side with a separator in between to ensure that no line exceeds the specified line length.
 
@@ -63,7 +72,10 @@ def print_two_paragraphs_side_by_side(heading1: str, paragraph1: str, heading2: 
     lines2 = []
     for _ in range(max(len(words1), len(words2))):
         line1 = ""
-        while words1 and current_line_length1 + len(words1[0]) + 1 <= line_length_per_paragraph:
+        while (
+            words1
+            and current_line_length1 + len(words1[0]) + 1 <= line_length_per_paragraph
+        ):
             current_word = words1.pop(0)
             line1 += current_word + " "
             current_line_length1 += len(current_word) + 1
@@ -71,7 +83,10 @@ def print_two_paragraphs_side_by_side(heading1: str, paragraph1: str, heading2: 
         lines1.append(line1)
 
         line2 = ""
-        while words2 and current_line_length2 + len(words2[0]) + 1 <= line_length_per_paragraph:
+        while (
+            words2
+            and current_line_length2 + len(words2[0]) + 1 <= line_length_per_paragraph
+        ):
             current_word = words2.pop(0)
             line2 += current_word + " "
             current_line_length2 += len(current_word) + 1
@@ -94,7 +109,9 @@ def print_two_paragraphs_side_by_side(heading1: str, paragraph1: str, heading2: 
         print(line1 + separator + line2)
 
 
-def get_player_answer(question: str, options: list[str], silent_error: bool = False) -> int:
+def get_player_answer(
+    question: str, options: list[str], silent_error: bool = False
+) -> int:
     """
     Get the player's answer to a multiple-choice question.
 
@@ -136,7 +153,8 @@ def get_player_answer(question: str, options: list[str], silent_error: bool = Fa
                 print("Input must be a number.")
 
 
-def closing_screen():
+def closing_screen() -> None:
+    """Print closing screen to terminal"""
     utils.clear_console()
     ascii_art = """
 
@@ -168,8 +186,8 @@ def closing_screen():
     print(ascii_art)
 
 
-def final(players):
-    """ display graphic, final score & credits """
+def final(players) -> None:
+    """display graphic, final score & credits"""
 
     trophy = """
                                                                     ...         ...
@@ -185,14 +203,33 @@ def final(players):
                                                                       
                                                                      
 """
-    print(trophy)
+
+    print(Fore.YELLOW + trophy + Style.RESET_ALL)
 
     display_podium(players)
 
-    print("\n" + Fore.YELLOW + " " * 10 + "🏆 Congratulation To All Players 🏆" + Style.RESET_ALL + "\n")
+    max_score = max(player.score for player in players.values())
+    winners = [player.name for player in players.values() if player.score == max_score]
+    trophy_emoji = "🏆"
+
+    if len(winners) == 1:
+        fact_master = f"{trophy_emoji * 3} {winners[0]} is the **FACT MASTER**! {trophy_emoji * 3}"
+    else:
+        fact_master = f"{trophy_emoji * 3} {' and '.join(winners)} are the **FACT MASTERS**! {trophy_emoji * 3}"
+
+    print(
+        "\n"
+        + Fore.LIGHTWHITE_EX
+        + f"  {trophy_emoji} Congratulation To All Players {trophy_emoji}  "
+        + Style.RESET_ALL
+    )
+    print("\n")
+    print(Fore.YELLOW + fact_master + Style.RESET_ALL)
+    print("\n")
 
 
-def header():
+def header() -> None:
+    """Print header to article"""
     utils.clear_console()
     ascii_art = """
     ▗▄▄▄▖ ▗▄▖  ▗▄▄▖▗▄▄▄▖     ▗▄▖ ▗▄▄▖     ▗▄▄▄▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
@@ -205,7 +242,8 @@ def header():
     print(ascii_art)
 
 
-def opening_screen():
+def opening_screen() -> None:
+    """Print opening screen"""
     utils.clear_console()
     ascii_art = """
     
@@ -237,15 +275,18 @@ def opening_screen():
     # Print the full ASCII art
     print(ascii_art)
 
-    input('Press "Enter" to start.')
+    input('Press "Enter" to start')
 
 
-def display_podium(players: dict[str, Player]):
+def display_podium(players: dict[str, Player]) -> None:
     """Displays a podium for the happy winners using a grid structure."""
     sorted_scores = sorted(players.values(), key=lambda x: x.score, reverse=True)
 
     scale_factor = 10
-    podium_info = [(player.name, player.score // scale_factor, player.score, player.color) for player in sorted_scores]
+    podium_info = [
+        (player.name, player.score // scale_factor, player.score, player.color)
+        for player in sorted_scores
+    ]
     max_height = max(height for _, height, _, _ in podium_info)
 
     rank_colors = [Fore.LIGHTYELLOW_EX, Fore.LIGHTWHITE_EX, Fore.YELLOW]
@@ -280,22 +321,26 @@ def display_podium(players: dict[str, Player]):
     print("  ".join(name_row))
 
 
-def display_player_scores_vertically(players):
-    """ Displays each player's name, score, and stars in a vertical format """
+def display_player_scores_vertically(players: dict[str, Player]) -> None:
+    """Displays each player's name, score, and stars in a vertical format"""
     for player in players.values():
-        stars = '*' * (player.score // 10)
-        print(f"{player.color}{player.name:<10}{Style.RESET_ALL} {player.score:<3} {stars}")
+        stars = "*" * (player.score // 10)
+        print(
+            f"{player.color}{player.name:<10}{Style.RESET_ALL} {player.score:<3} {stars}"
+        )
 
 
-def display_player_scores_horizontally(players):
-    """ Displays each player's name, score, and stars in a horizontal format """
+def display_player_scores_horizontally(players: dict[str, Player]) -> None:
+    """Displays each player's name, score, and stars in a horizontal format"""
     column_width = 15
 
     name_row = "  ".join(
-        f"{player.color}{player.name:<{column_width}}{Style.RESET_ALL}" for player in players.values()
+        f"{player.color}{player.name:<{column_width}}{Style.RESET_ALL}"
+        for player in players.values()
     )
     score_row = "  ".join(
-        f"{player.color}{str(player.score):<{column_width}}{Style.RESET_ALL}" for player in players.values()
+        f"{player.color}{str(player.score):<{column_width}}{Style.RESET_ALL}"
+        for player in players.values()
     )
 
     print(" " * 2, name_row)
@@ -303,7 +348,7 @@ def display_player_scores_horizontally(players):
 
 
 def main():
-    def test_print_paragraph_with_linebreaks():
+    def test_print_paragraph_with_linebreaks() -> None:
         paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
         print_paragraph_with_linebreaks(paragraph)
         print("=================")
@@ -311,8 +356,7 @@ def main():
         print("=================")
         print_paragraph_with_linebreaks(paragraph, line_length=40, indent=4)
 
-
-    def test_print_two_paragraphs_side_by_side():
+    def test_print_two_paragraphs_side_by_side() -> None:
         paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
         header1 = "Paragraph 1"
         header2 = "Paragraph 2"
@@ -320,8 +364,7 @@ def main():
         print()
         print_two_paragraphs_side_by_side("", paragraph, "", paragraph, line_length=100)
 
-
-    def test_get_player_answer():
+    def test_get_player_answer() -> None:
         question = "Choose between 1 or 2 and hit enter!"
         options = ["FACT", "FAKE"]
         answer = get_player_answer(question, options)

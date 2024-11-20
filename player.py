@@ -10,20 +10,21 @@ class Player:
 
     @classmethod
     def get_color(cls) -> str:
+        """Provide new Players with generated color"""
         # Get the current color based on the index
         color = cls.COLORS[cls.color_index]
         # Increment the index and wrap around if it exceeds the length of COLORS
         cls.color_index = (cls.color_index + 1) % len(cls.COLORS)
         return color
 
-    def __init__(self, name) -> None:
+    def __init__(self, name: str) -> None:
         self.name = name
-        self.color = self.get_color()
-        self.score = 0
-        self.scored_in_a_row = 0
-        self.has_crash = True
+        self.color: str = self.get_color()
+        self.score: int = 0
+        self.scored_in_a_row: int = 0
+        self.has_crash: bool = True
 
-    def update_score(self, score) -> None:
+    def update_score(self, score: int) -> None:
         if not score:
             self.scored_in_a_row = 0
         else:

@@ -15,7 +15,7 @@ def main() -> None:
     run_game(difficulty, category)
 
 
-def select_difficulty():
+def select_difficulty() -> str:
     """Ask User to choose between three difficulties"""
     question = "Choose difficulty level:"
     options = list(DIFFICULTIES.keys())

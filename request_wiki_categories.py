@@ -4,7 +4,7 @@ import re
 import requests
 
 
-def fetch_articles(category):
+def fetch_articles(category: str) -> list[str]:
     """Fetch article titles form wikipedia corresponding to chosen category"""
     # Step 1: Fetch article content
     url = "https://en.wikipedia.org/w/api.php"
@@ -36,12 +36,12 @@ def fetch_articles(category):
     return filtered_titles
 
 
-def get_random_valid_title(category):
+def get_random_valid_title(category: str) -> str:
     """Pick one random title from fetched article list"""
     titles = fetch_articles(category)
 
     while True:
-        article: str = random.choice(titles)
+        article = random.choice(titles)
         if article.startswith("List of"):
             continue
         if re.match(r"\S*#\S*", article):
@@ -49,7 +49,7 @@ def get_random_valid_title(category):
         return article
 
 
-def get_article_content(title):
+def get_article_content(title: str) -> tuple[str, str]:
     """Get article content from given title"""
     url = "https://en.wikipedia.org/w/api.php"
     params = {
@@ -68,8 +68,3 @@ def get_article_content(title):
         title = page_data.get("title", None)
         summary = page_data.get("extract", None)
         return title, summary
-
-
-# for category in CATEGORIES:
-#     article_title = get_random_valid_title(category)
-#     article = get_article_content(article_title)
