@@ -1,16 +1,17 @@
 import random
-import crashes
-import pretty_print
 
 from colorama import Fore, Style, init
 
 from ai_api import get_fake_passage
+from crashes import wants_crash, choose_crash
 from player import Player
-from pretty_print import header, display_player_scores_horizontally, display_podium, closing_screen, final
+from pretty_print import header, display_player_scores_horizontally, print_two_paragraphs_side_by_side, closing_screen, final, get_player_answer
 from request_wiki_categories import get_random_valid_title, get_article_content
 from validation import get_player_number, get_rounds_number, get_player_name
 
 init(autoreset=True)
+
+MAX_RETRIES = 3
 
 
 def run_question(fake_passage, passage, round_str, players):
@@ -23,13 +24,13 @@ def run_question(fake_passage, passage, round_str, players):
     passages = [passage, fake_passage]
     random.shuffle(passages)
 
-    shortend_passages = []
+    shortened_passages = []
     for passage in passages:
         sentences = passage.split(". ")
-        shortend_passages.append(". ".join(sentences[:6]) + ".")
+        shortened_passages.append(". ".join(sentences[:6]) + ".")
 
-    pretty_print.print_two_paragraphs_side_by_side(
-        "Paragraph 1", shortend_passages[0], "Paragraph 2", shortend_passages[1]
+    print_two_paragraphs_side_by_side(
+        "Paragraph 1", shortened_passages[0], "Paragraph 2", shortened_passages[1]
     )
     print()
 
@@ -37,7 +38,7 @@ def run_question(fake_passage, passage, round_str, players):
         try:
             question = Fore.LIGHTGREEN_EX + "Which paragraph is fake?:"
             options = ["Paragraph", "Paragraph"]
-            user_input = pretty_print.get_player_answer(question, options)
+            user_input = get_player_answer(question, options)
             print(user_input)
             if (user_input == 0 and passages[0] == fake_passage) or (
                 user_input == 1 and passages[1] == fake_passage
@@ -51,12 +52,6 @@ def run_question(fake_passage, passage, round_str, players):
                 print(Fore.RED + "Invalid input. Please choose only 1 or 2")
         except ValueError:
             print(Fore.RED + "Invalid input. Please enter a number (1 or 2)")
-
-
-# real_passage = "The Eiffel Tower is located in Paris and was completed in 1889."
-# fake_passage = "The Eiffel Tower was originally constructed in Tokyo before being moved to Paris."
-# run_question(fake_passage,real_passage)
-MAX_RETRIES = 3
 
 
 def run_round(difficulty, category, round_str, players, crash=False) -> int:
@@ -78,7 +73,7 @@ def run_round(difficulty, category, round_str, players, crash=False) -> int:
         raise Exception("Failed to fetch article content")
 
     if crash:
-        crash_function = crashes.choose_crash()
+        crash_function = choose_crash()
         crashed_fake_passage = crash_function(fake_passage)
         crashed_article_text = crash_function(article_content)
         return run_question(
@@ -123,7 +118,7 @@ def run_game(difficulty, category) -> None:
                     total_players > 1
                     and current_player.has_crash
                     and game_round < total_rounds
-                    and crashes.wants_crash()
+                    and wants_crash()
                 ) or (
                     game_round == total_rounds - 1
                     and current_player.has_crash
