@@ -1,3 +1,4 @@
+from ai_api import DIFFICULTIES
 from game_logic import run_game
 from pretty_print import (
     get_player_answer,
@@ -17,7 +18,7 @@ def main() -> None:
 def select_difficulty():
     """Ask User to choose between three difficulties"""
     question = "Choose difficulty level:"
-    options = ["Easy", "Medium", "Hard"]
+    options = list(DIFFICULTIES.keys())
     choice = get_player_answer(question, options)
     return options[choice].lower()
 
