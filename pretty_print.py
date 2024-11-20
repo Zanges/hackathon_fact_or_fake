@@ -1,3 +1,9 @@
+from colorama import Fore, Style, init
+
+
+init()
+
+
 def print_paragraph_with_linebreaks(paragraph: str, line_length: int = 80, indent: int = 0) -> None:
     """
     Print a paragraph with line breaks to ensure that no line exceeds the specified line length.
@@ -27,11 +33,13 @@ def print_paragraph_with_linebreaks(paragraph: str, line_length: int = 80, inden
     print()
 
 
-def print_two_paragraphs_side_by_side(paragraph1: str, paragraph2: str, line_length: int = 200, separator: str = "  │  ") -> None:
+def print_two_paragraphs_side_by_side(heading1: str, paragraph1: str, heading2: str, paragraph2: str, line_length: int = 200, separator: str = "  │  ") -> None:
     """
     Print two paragraphs side by side with a separator in between to ensure that no line exceeds the specified line length.
 
+    :param heading1: The heading for the first paragraph.
     :param paragraph1: The first paragraph to print.
+    :param heading2: The heading for the second paragraph.
     :param paragraph2: The second paragraph to print.
     :param line_length: The maximum length of a line.
     :param separator: The separator between the two paragraphs.
@@ -68,6 +76,14 @@ def print_two_paragraphs_side_by_side(paragraph1: str, paragraph2: str, line_len
         current_line_length1 = 0
         current_line_length2 = 0
 
+    space_after_heading1 = line_length_per_paragraph - len(heading1)
+    if heading1:
+        heading1 = Fore.LIGHTYELLOW_EX + heading1 + Style.RESET_ALL
+    if heading2:
+        heading2 = Fore.LIGHTYELLOW_EX + heading2 + Style.RESET_ALL
+    if heading1 and heading2:
+        print(heading1 + (" " * space_after_heading1) + separator + heading2)
+        print("─" * line_length)
     for line1, line2 in zip(lines1, lines2):
         if line1.strip() == "" and line2.strip() == "":
             break
@@ -127,11 +143,11 @@ def test_print_paragraph_with_linebreaks():
 
 def test_print_two_paragraphs_side_by_side():
     paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-    print_two_paragraphs_side_by_side(paragraph, paragraph)
+    header1 = "Paragraph 1"
+    header2 = "Paragraph 2"
+    print_two_paragraphs_side_by_side(header1, paragraph, header2, paragraph)
     print()
-    print_two_paragraphs_side_by_side(paragraph, paragraph, line_length=40)
-    print()
-    print_two_paragraphs_side_by_side(paragraph, paragraph, line_length=90, separator="   ")
+    print_two_paragraphs_side_by_side("", paragraph, "", paragraph, line_length=100)
 
 
 def test_get_player_answer():

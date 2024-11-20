@@ -3,23 +3,29 @@ from colorama import Fore, Style, init
 
 import pretty_print
 from header import header
+from podium import display_player_scores_horizontally
 
 init(autoreset=True)
 
-def run_question(fake_passage, passage):
+def run_question(fake_passage, passage, round_str, players):
     # print(Fore.LIGHTCYAN_EX + "-------------------------------------------")
     # print(Fore.LIGHTCYAN_EX + "-------- Welcome to our Wiki Game ---------")
     # print(Fore.LIGHTCYAN_EX + "Try to guess which one is the fake passage!")
     # print(Fore.LIGHTCYAN_EX + "-------------------------------------------")
     header()
+    print(round_str)
+    display_player_scores_horizontally(players)
+    print()
 
 
     passages = [passage, fake_passage]
     random.shuffle(passages)
 
-    pretty_print.print_paragraph_with_linebreaks(Fore.LIGHTYELLOW_EX + "1. " + passages[0])
+    # pretty_print.print_paragraph_with_linebreaks(Fore.LIGHTYELLOW_EX + "1. " + passages[0])
+    # print()
+    # pretty_print.print_paragraph_with_linebreaks(Fore.LIGHTYELLOW_EX + "2. " + passages[1])
+    pretty_print.print_two_paragraphs_side_by_side("Paragraph 1", passages[0], "Paragraph 2", passages[1])
     print()
-    pretty_print.print_paragraph_with_linebreaks(Fore.LIGHTYELLOW_EX + "2. " + passages[1])
 
     while True:
         try:

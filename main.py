@@ -8,11 +8,14 @@ from zanges_lea import get_fake_passage
 from header import header
 from pretty_print import get_player_answer
 from podium import display_podium
+from opening_screen import opening_screen
+from closing_screen import closing_screen
 
 from validation import get_player_number, get_rounds_number, get_player_name
 
 
 def main() -> None:
+    opening_screen()
     header()
     category = select_category()
     difficulty = select_difficulty()
@@ -36,9 +39,7 @@ def select_category() -> str:
     choice = get_player_answer(question, categories)
     return categories[choice]
 
-def run_round(difficulty, category, crash=False) -> int:
-    # article_dict = get_random_article_text()
-    # article_text = article_dict["summary"]
+def run_round(difficulty, category, round_str, players, crash=False) -> int:
     title = get_random_valid_title(category)
     title, article_content = get_article_content(title)
     fake_passage = get_fake_passage(article_content, difficulty)
@@ -46,8 +47,8 @@ def run_round(difficulty, category, crash=False) -> int:
         crash_function = crashes.choose_crash()
         crashed_fake_passage = crash_function(fake_passage)
         crashed_article_text = crash_function(article_content)
-        return run_question(crashed_fake_passage, crashed_article_text)
-    return run_question(fake_passage, article_content)
+        return run_question(crashed_fake_passage, crashed_article_text, round_str, players)
+    return run_question(fake_passage, article_content, round_str, players)
 
 
 def run_game(difficulty, category) -> None:
@@ -66,26 +67,35 @@ def run_game(difficulty, category) -> None:
         for player in players.values():
             current_player = player
 
-            print(Fore.BLUE + f"Round: {game_round} Player: {current_player.name}")
+            round_str = Fore.BLUE + f"  Round: {game_round}/{total_rounds} Player:"
+            round_str += Fore.RED + f"  ──── This is {current_player.name}'s turn. ────  "
+            round_str += Fore.BLUE + f"Score: {current_player.score}"
+
+
 
             if crash:
-                score = run_round(difficulty, category, crash=True)
+                score = run_round(difficulty, category, round_str, players, crash=True)
                 crash = False
             else:
-                score = run_round(difficulty, category)
+                score = run_round(difficulty, category, round_str, players)
 
-            if (
-                total_players > 1
-                and current_player.has_crash
-                and game_round < total_rounds
-                and crashes.wants_crash()
-            ):
-                crash = True
-                current_player.has_crash = False
+            if total_rounds > 1:
+                if (
+                        (total_players > 1
+                    and current_player.has_crash
+                    and game_round < total_rounds
+                    and crashes.wants_crash())
+                    or (game_round == total_rounds - 1
+                        and current_player.has_crash
+                        and total_players > 1)
+                ):
+                    crash = True
+                    current_player.has_crash = False
 
             current_player.update_score(score)
 
     display_podium(players)
+    closing_screen()
 
 
 

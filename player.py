@@ -1,5 +1,7 @@
+from colorama import Fore
+
 class Player:
-    COLORS = ("red", "green", "blue", "green")
+    COLORS = (Fore.RED, Fore.GREEN, Fore.BLUE, Fore.CYAN, Fore.MAGENTA)
     color_index = 0
 
     def __init__(self, name) -> None:

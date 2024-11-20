@@ -7,13 +7,15 @@ YES_NO_CHOICES = ["yes", "no"]
 
 
 def wants_crash() -> bool:
+    """Ask User for to call a crash"""
     use_ultimate = get_player_answer("Do you want to use the ultimate crash? (yes/no): ", YES_NO_CHOICES)
     if use_ultimate == 0:
         return True
     return False
 
 
-def random_crash(text):
+def random_crash(text) -> str:
+    """Get a random crash"""
     crashes = (
         reverse_crash,
         replace_crash,
@@ -25,16 +27,19 @@ def random_crash(text):
 
 
 def choose_crash():
+    """Ask User to choose crash"""
     crash_choices = [crash["label"] for crash in CRASH_LIST]
     crash_choice = get_player_answer("Choose a crash: ", crash_choices)
     return CRASH_LIST[crash_choice]["function"]
 
 
 def reverse_crash(text) -> str:
+    """Crash to reverse text"""
     return text[::-1]
 
 
 def replace_crash(text) -> str:
+    """Crash to replace all e's to o's"""
     return text.replace("e", "o")
 
 

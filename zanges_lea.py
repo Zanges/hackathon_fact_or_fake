@@ -65,7 +65,7 @@ DIFFICULTIES = {
 
 def get_fake_passage(passage: str, difficulty: str) -> str:
     """ Generate a fake passage based on the provided passage and difficulty level. """
-    print("\nGenerating fake passage...\n")
+    print("\nGenerating passage...\n")
     if not passage:
         raise ValueError("passage must not be empty.")
     if difficulty not in DIFFICULTIES:

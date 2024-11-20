@@ -1,4 +1,10 @@
 # bunt!
+from colorama import init, Fore, Style
+init()
+input_color = Fore.YELLOW
+error_color = Fore.RED
+success_color = Fore.BLUE
+highlight_color = Fore.MAGENTA
 
 def get_rounds_number() -> int:
     """ """
