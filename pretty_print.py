@@ -5,6 +5,8 @@ from player import Player
 
 init()
 
+PODIUM_COLOR = Fore.YELLOW
+
 
 def print_paragraph_with_linebreaks(paragraph: str, line_length: int = 80, indent: int = 0) -> None:
     """
@@ -134,41 +136,6 @@ def get_player_answer(question: str, options: list[str], silent_error: bool = Fa
                 print("Input must be a number.")
 
 
-def test_print_paragraph_with_linebreaks():
-    paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-    print_paragraph_with_linebreaks(paragraph)
-    print("=================")
-    print_paragraph_with_linebreaks(paragraph, line_length=40)
-    print("=================")
-    print_paragraph_with_linebreaks(paragraph, line_length=40, indent=4)
-
-
-def test_print_two_paragraphs_side_by_side():
-    paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-    header1 = "Paragraph 1"
-    header2 = "Paragraph 2"
-    print_two_paragraphs_side_by_side(header1, paragraph, header2, paragraph)
-    print()
-    print_two_paragraphs_side_by_side("", paragraph, "", paragraph, line_length=100)
-
-
-def test_get_player_answer():
-    question = "Choose between 1 or 2 and hit enter!"
-    options = ["FACT", "FAKE"]
-    answer = get_player_answer(question, options)
-    print(f"Player chose option {answer + 1}")
-
-
-def main():
-    # test_print_paragraph_with_linebreaks()
-    test_print_two_paragraphs_side_by_side()
-    #test_get_player_answer()
-
-
-if __name__ == "__main__":
-    main()
-
-
 def closing_screen():
     utils.clear_console()
     ascii_art = """
@@ -219,18 +186,10 @@ def final(players):
                                                                      
 """
     print(trophy)
-    # return trophy
 
-
-# trophy_ascii = final(players)
-# print(trophy_ascii)
     display_podium(players)
 
     print("\n" + Fore.YELLOW + " " * 10 + "🏆 Congratulation To All Players 🏆" + Style.RESET_ALL + "\n")
-    print(Fore.LIGHTGREEN_EX + "Thanks for playing our game!\nHope you had some fun playing it\nWe had a lot of fun creating it\n" + Style.RESET_ALL)
-    print(Fore.LIGHTGREEN_EX + "Don´t eat cats and dogs!\n" + Fore.LIGHTGREEN_EX)
-    print("____________________________________________")
-    print(Fore.LIGHTGREEN_EX + "Creators: Dominik, Philipp, Amir, Jorge, Lea, \n" + Style.RESET_ALL)
 
 
 def header():
@@ -278,11 +237,7 @@ def opening_screen():
     # Print the full ASCII art
     print(ascii_art)
 
-
-    start = input('Press "Enter" to start.')
-
-
-PODIUM_COLOR = Fore.YELLOW
+    input('Press "Enter" to start.')
 
 
 def display_podium(players: dict[str, Player]):
@@ -334,7 +289,6 @@ def display_player_scores_vertically(players):
 
 def display_player_scores_horizontally(players):
     """ Displays each player's name, score, and stars in a horizontal format """
-
     column_width = 15
 
     name_row = "  ".join(
@@ -343,11 +297,40 @@ def display_player_scores_horizontally(players):
     score_row = "  ".join(
         f"{player.color}{str(player.score):<{column_width}}{Style.RESET_ALL}" for player in players.values()
     )
-    stars_row = "  ".join(
-        f"{'*' * (player.score // 10):<{column_width}}" for player in players.values()
-    )
 
-    # print("─" * (column_width * len(players)))
     print(" " * 2, name_row)
     print(" " * 2, score_row)
-    # print(stars_row)
+
+
+def main():
+    def test_print_paragraph_with_linebreaks():
+        paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        print_paragraph_with_linebreaks(paragraph)
+        print("=================")
+        print_paragraph_with_linebreaks(paragraph, line_length=40)
+        print("=================")
+        print_paragraph_with_linebreaks(paragraph, line_length=40, indent=4)
+
+
+    def test_print_two_paragraphs_side_by_side():
+        paragraph = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        header1 = "Paragraph 1"
+        header2 = "Paragraph 2"
+        print_two_paragraphs_side_by_side(header1, paragraph, header2, paragraph)
+        print()
+        print_two_paragraphs_side_by_side("", paragraph, "", paragraph, line_length=100)
+
+
+    def test_get_player_answer():
+        question = "Choose between 1 or 2 and hit enter!"
+        options = ["FACT", "FAKE"]
+        answer = get_player_answer(question, options)
+        print(f"Player chose option {answer + 1}")
+
+    test_print_paragraph_with_linebreaks()
+    test_print_two_paragraphs_side_by_side()
+    test_get_player_answer()
+
+
+if __name__ == "__main__":
+    main()
