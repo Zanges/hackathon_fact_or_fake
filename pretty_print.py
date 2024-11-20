@@ -1,11 +1,10 @@
-from colorama import Fore, Style, init
+from colorama import Fore, Style
+import random
 
 import utils
+from colors import INPUT_COLOR, HIGHLIGHT_COLOR, GOLD_COLOR, PLAIN_HIGHLIGHT_COLOR, ERROR_COLOR
 from player import Player
 
-init()
-
-PODIUM_COLOR = Fore.YELLOW
 
 
 def print_paragraph_with_linebreaks(
@@ -97,9 +96,9 @@ def print_two_paragraphs_side_by_side(
 
     space_after_heading1 = line_length_per_paragraph - len(heading1)
     if heading1:
-        heading1 = Fore.LIGHTYELLOW_EX + heading1 + Style.RESET_ALL
+        heading1 = PLAIN_HIGHLIGHT_COLOR + heading1 + Style.RESET_ALL
     if heading2:
-        heading2 = Fore.LIGHTYELLOW_EX + heading2 + Style.RESET_ALL
+        heading2 = PLAIN_HIGHLIGHT_COLOR + heading2 + Style.RESET_ALL
     if heading1 and heading2:
         print(heading1 + (" " * space_after_heading1) + separator + heading2)
         print("─" * line_length)
@@ -130,13 +129,13 @@ def get_player_answer(
         raise ValueError("options must not contain empty strings.")
 
     print("─" * len(question))
-    print(question)
+    print(INPUT_COLOR + question + Style.RESET_ALL)
     answer_lines = ["", "", ""]
     for i, option in enumerate(options, start=1):
         text = f"{i}. {option}"
         horizontal_line = "─" * (len(text) + 2)
         answer_lines[0] += f"╭{horizontal_line}╮  "
-        answer_lines[1] += f"│ {text} │  "
+        answer_lines[1] += f"│ {PLAIN_HIGHLIGHT_COLOR + text + Style.RESET_ALL} │  "
         answer_lines[2] += f"╰{horizontal_line}╯  "
     for line in answer_lines:
         print(line)
@@ -147,10 +146,10 @@ def get_player_answer(
                 return answer - 1
             else:
                 if not silent_error:
-                    print(f"Input must be in range 1 - {len(options)}")
+                    print(ERROR_COLOR + f"Choose only between 1 - {len(options)}" + Style.RESET_ALL)
         except ValueError:
             if not silent_error:
-                print("Input must be a number.")
+                print(ERROR_COLOR + "Input must be a number. Try again!" + Style.RESET_ALL)
 
 
 def closing_screen() -> None:
@@ -189,27 +188,33 @@ def closing_screen() -> None:
 def final(players) -> None:
     """display graphic, final score & credits"""
 
-    trophy = """
-                                                                    ...         ...
-                                                                   --..-**-- .=*-..--
-##   ##    ####   ###  ##  ###  ##  ### ###  ### ##    ## ##       --  :#+==.:**:  --
-##   ##     ##      ## ##    ## ##   ##  ##   ##  ##  ##   ##       :: :*===:=**:.::
-##   ##     ##     # ## #   # ## #   ##       ##  ##  ####            .:*==+:=**:. 
-## # ##     ##     ## ##    ## ##    ## ##    ## ##    #####           ..++*+++..
-# ### #     ##     ##  ##   ##  ##   ##       ## ##       ###             .++. 
- ## ##      ##     ##  ##   ##  ##   ##  ##   ##  ##  ##   ##             -=:-    
-##   ##    ####   ###  ##  ###  ##  ### ###  #### ##   ## ##            .=+-:+=.   
-                                                                        .:.. .:.  
-                                                                      
-                                                                     
-"""
+   #  trophy = """
+   #  ...         ...
+   # --..-**-- .=*-..--
+   # --  :#+==.:**:  --
+   #  :: :*===:=**:.::
+   #    .:*==+:=**:.
+   #     ..++*+++..
+   #        .++.
+   #        -=:-
+   #      .=+-:+=.
+   #      .:.. .:.
+   #      """
+   #
+   #
+   #  print(GOLD_COLOR + trophy + Style.RESET_ALL)
 
-    print(Fore.YELLOW + trophy + Style.RESET_ALL)
+    emojis = ["🏆 ", "🎉 ", "🥳 ", "🍾 ", "⭐ "]
+    emoji_str = " "
+    for i in range(1000):
+        rand_emoji = random.choice(emojis)
+        emoji_str += rand_emoji
 
+    print_paragraph_with_linebreaks(emoji_str, 100)
     display_podium(players)
 
     max_score = max(player.score for player in players.values())
-    winners = [player.name for player in players.values() if player.score == max_score]
+    winners = [player.color + player.name for player in players.values() if player.score == max_score]
     trophy_emoji = "🏆"
 
     if len(winners) == 1:
@@ -218,14 +223,15 @@ def final(players) -> None:
         fact_master = f"{trophy_emoji * 3} {' and '.join(winners)} are the **FACT MASTERS**! {trophy_emoji * 3}"
 
     print(
-        "\n"
-        + Fore.LIGHTWHITE_EX
+        "\n\n"
+        + PLAIN_HIGHLIGHT_COLOR
         + f"  {trophy_emoji} Congratulation To All Players {trophy_emoji}  "
         + Style.RESET_ALL
     )
-    print("\n")
-    print(Fore.YELLOW + fact_master + Style.RESET_ALL)
-    print("\n")
+    print()
+    print(PLAIN_HIGHLIGHT_COLOR + fact_master + Style.RESET_ALL)
+    print()
+
 
 
 def header() -> None:
@@ -275,7 +281,7 @@ def opening_screen() -> None:
     # Print the full ASCII art
     print(ascii_art)
 
-    input('Press "Enter" to start')
+    input(INPUT_COLOR + 'Press "Enter" to start' + Style.RESET_ALL)
 
 
 def display_podium(players: dict[str, Player]) -> None:
@@ -289,14 +295,14 @@ def display_podium(players: dict[str, Player]) -> None:
     ]
     max_height = max(height for _, height, _, _ in podium_info)
 
-    rank_colors = [Fore.LIGHTYELLOW_EX, Fore.LIGHTWHITE_EX, Fore.YELLOW]
-    default_color = Fore.LIGHTGREEN_EX
+    # rank_colors = [Fore.LIGHTYELLOW_EX, Fore.LIGHTWHITE_EX, Fore.YELLOW]
+    # default_color = Fore.LIGHTGREEN_EX
 
     grid = []
     for level in range(max_height + 1):
         row = []
-        for i, (_, height, _, _) in enumerate(podium_info):
-            color = rank_colors[i] if i < len(rank_colors) else default_color
+        for i, (_, height, _, color) in enumerate(podium_info):
+            # color = rank_colors[i] if i < len(rank_colors) else default_color
             if max_height - level < height:
                 row.append(color + "|      |" + Style.RESET_ALL)
             elif max_height - level == height:
@@ -370,9 +376,9 @@ def main():
         answer = get_player_answer(question, options)
         print(f"Player chose option {answer + 1}")
 
-    test_print_paragraph_with_linebreaks()
-    test_print_two_paragraphs_side_by_side()
-    test_get_player_answer()
+    # test_print_paragraph_with_linebreaks()
+    # test_print_two_paragraphs_side_by_side()
+    # test_get_player_answer()
 
 
 if __name__ == "__main__":

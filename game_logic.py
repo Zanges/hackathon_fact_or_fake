@@ -3,6 +3,7 @@ import random
 from colorama import Fore, Style, init
 
 from ai_api import get_fake_passage
+from colors import INPUT_COLOR, ERROR_COLOR, SCORE_COLOR
 from crashes import wants_crash, choose_crash
 from player import Player
 from pretty_print import (
@@ -50,22 +51,22 @@ def run_question(
 
     while True:
         try:
-            question = Fore.LIGHTGREEN_EX + "Which paragraph is fake?:"
+            question = "Which paragraph is fake?:"
             options = ["Paragraph", "Paragraph"]
             user_input = get_player_answer(question, options)
             print(user_input)
             if (user_input == 0 and passages[0] == fake_passage) or (
                 user_input == 1 and passages[1] == fake_passage
             ):
-                print(Fore.GREEN + Style.BRIGHT + "Correct! You earn 10 points")
+                print(SCORE_COLOR + "Correct! You earn 10 points" + Style.RESET_ALL)
                 return 10
             elif user_input in [0, 1]:
-                print(Fore.RED + Style.BRIGHT + "Incorrect! Better luck next time ...")
+                print(ERROR_COLOR + "Incorrect! Better luck next time ..." + Style.RESET_ALL)
                 return 0
             else:
-                print(Fore.RED + "Invalid input. Please choose only 1 or 2")
+                print(ERROR_COLOR + "Invalid input. Please choose only 1 or 2" + Style.RESET_ALL)
         except ValueError:
-            print(Fore.RED + "Invalid input. Please enter a number (1 or 2)")
+            print(ERROR_COLOR + "Invalid input. Please enter a number (1 or 2)" + Style.RESET_ALL)
 
 
 def run_round(
@@ -118,13 +119,14 @@ def run_game(difficulty: str, category: str) -> None:
         for player in players.values():
             current_player = player
 
-            round_str = Fore.BLUE + f"   Round: {game_round}/{total_rounds}"
+            round_str = f"   Round: {game_round}/{total_rounds}"
             round_str += (
                 current_player.color
                 + f"  ──── This is {current_player.name}'s turn ────  "
+                + Style.RESET_ALL
             )
-            round_str += Fore.BLUE + f"Score: {current_player.score}"
-            round_str_len = len(round_str.replace(Fore.BLUE, "").replace(Fore.RED, ""))
+            round_str += f"Score: {current_player.score}"
+            round_str_len = len(round_str.replace(Fore.RED, "").replace(Style.RESET_ALL, ""))
             seperator = "─" * (round_str_len + 3)
             round_str += "\n" + seperator
 
@@ -151,5 +153,5 @@ def run_game(difficulty: str, category: str) -> None:
             current_player.update_score(score)
 
     final(players)
-    input("Press Enter to continue!")
+    input(INPUT_COLOR + "Press Enter to continue!" + Style.RESET_ALL)
     closing_screen()

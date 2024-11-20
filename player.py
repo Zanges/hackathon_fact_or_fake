@@ -1,11 +1,11 @@
 """ Creates Player Object to store information of each Player. When a new Player is created it gets a color from COLORS.
 Every Player has a name, color, score and the possibility to cast a crash once a round"""
 
-from colorama import Fore
+from colorama import Fore, Style
 
 
 class Player:
-    COLORS = (Fore.RED, Fore.GREEN, Fore.BLUE, Fore.CYAN, Fore.MAGENTA)
+    COLORS = (Fore.BLUE, Fore.RED, Fore.GREEN, Fore.CYAN, Fore.MAGENTA, Fore.YELLOW, Fore.LIGHTBLUE_EX, Fore.LIGHTGREEN_EX)
     color_index = 0
 
     @classmethod

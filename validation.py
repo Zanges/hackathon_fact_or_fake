@@ -1,11 +1,7 @@
-from colorama import init, Fore, Style
+from colorama import Style
+from colors import INPUT_COLOR, ERROR_COLOR
 
-init()
 
-INPUT_COLOR = Fore.CYAN
-ERROR_COLOR = Fore.RED
-SUCCESS_COLOR = Fore.BLUE
-HIGHLIGHT_COLOR = Fore.MAGENTA
 
 
 def get_rounds_number(max_round: int = 10) -> int:

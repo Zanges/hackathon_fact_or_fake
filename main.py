@@ -19,6 +19,7 @@ def select_difficulty() -> str:
     """Ask User to choose between three difficulties"""
     question = "Choose difficulty level:"
     options = list(DIFFICULTIES.keys())
+    options = [string.capitalize() for string in options]
     choice = get_player_answer(question, options)
     return options[choice].lower()
 
