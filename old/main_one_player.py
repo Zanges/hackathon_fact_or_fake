@@ -1,6 +1,6 @@
 from giorgio import get_random_article_text
 from lea import get_passage
-from phil_amir import run_question
+from game_logic import run_question
 from giorgio import get_random_article_text
 from zanges import get_fake_passage
 

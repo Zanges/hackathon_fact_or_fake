@@ -1,13 +1,11 @@
 import random
-
-import requests
 import re
 
-from unicodedata import category
-
+import requests
 
 
 def fetch_articles(category):
+    """Fetch article titles form wikipedia corresponding to chosen category"""
     # Step 1: Fetch article content
     url = "https://en.wikipedia.org/w/api.php"
     params = {
@@ -15,7 +13,7 @@ def fetch_articles(category):
         "titles": category,
         "prop": "revisions",
         "rvprop": "content",
-        "format": "json"
+        "format": "json",
     }
     response = requests.get(url, params=params)
     data = response.json()
@@ -30,28 +28,29 @@ def fetch_articles(category):
     else:
         articles = re.findall(r"''\[\[([^\]]+)\]\]''", content)
 
-
     # Filter out non-movie links (e.g., sections or unrelated links)
-    filtered_titles = [title.split('|')[0] for title in articles if not title.startswith("File:")]
+    filtered_titles = [
+        title.split("|")[0] for title in articles if not title.startswith("File:")
+    ]
 
     return filtered_titles
 
 
-
 def get_random_valid_title(category):
-    movie_titles = fetch_articles(category)
+    """Pick one random title from fetched article list"""
+    titles = fetch_articles(category)
 
     while True:
-        article :str = random.choice(movie_titles)
+        article: str = random.choice(titles)
         if article.startswith("List of"):
-            print(article, "Wrong")
             continue
         if re.match(r"\S*#\S*", article):
-            print(article, "Wrong")
             continue
         return article
 
+
 def get_article_content(title):
+    """Get article content from given title"""
     url = "https://en.wikipedia.org/w/api.php"
     params = {
         "action": "query",
@@ -59,7 +58,7 @@ def get_article_content(title):
         "prop": "extracts",
         "exintro": True,
         "explaintext": True,
-        "format": "json"
+        "format": "json",
     }
     response = requests.get(url, params=params)
     data = response.json()

@@ -1,8 +1,9 @@
-import dotenv
-from openai import OpenAI
 import os
 
-import giorgio
+import dotenv
+from openai import OpenAI
+
+import request_wiki_categories
 
 dotenv.load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -82,35 +83,6 @@ def get_fake_passage(passage: str, difficulty: str) -> str:
                     {
                         "type": "text",
                         "text": DIFFICULTIES[difficulty]["prompt"]
-
-                            # f"""
-                            # You are an AI, that is part of a game, tasked with creating a fake passage based on a provided excerpt.
-                            # Your goal is to rewrite the passage with:
-                            # The player chose the following difficulty: {difficulty}
-                            # - Believable details that mimic Wikipedia's formal style.
-                            # - Coherence and proper structure while avoiding obvious gibberish.
-                            # - Avoid merely swapping dates or names; instead, creatively rewrite ideas to appear plausible yet false.
-                            #
-                            # Important:
-                            # - The rewritten passage **must not exceed the word or character count** of the original excerpt.
-                            # - Prioritize concise phrasing and efficient language while maintaining clarity and formal tone.
-                            #
-                            # Now, rewrite the provided passage adhering strictly to the guidelines above.
-                            # """
-
-                            # """
-                            # "You are an AI tasked with creating a highly convincing fake passage based on a provided excerpt.
-                            # Your goal is to rewrite the passage with:
-                            # - Believable details that mimic Wikipedia's formal style.
-                            # - Coherence and proper structure while avoiding obvious gibberish.
-                            # - Avoid merely swapping dates or names; instead, creatively rewrite ideas to appear plausible yet false.
-                            #
-                            # Important:
-                            # - The rewritten passage **must not exceed the word or character count** of the original excerpt.
-                            # - Prioritize concise phrasing and efficient language while maintaining clarity and formal tone.
-                            #
-                            # Now, rewrite the provided passage adhering strictly to the guidelines above."
-                            # """
                     }
                 ]
             },
@@ -138,7 +110,10 @@ def get_fake_passage(passage: str, difficulty: str) -> str:
 def main():
     import pretty_print
 
-    dev_passage = giorgio.get_random_article_text()["summary"]
+    dev_passage = request_wiki_categories.get_article_content(
+        request_wiki_categories.get_random_valid_title(
+            "List of video games considered the best"
+        ))[1]
     easy_fake_passage = get_fake_passage(dev_passage, "easy")
     medium_fake_passage = get_fake_passage(dev_passage, "medium")
     hard_fake_passage = get_fake_passage(dev_passage, "hard")

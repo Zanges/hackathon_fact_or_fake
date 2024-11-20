@@ -1,5 +1,7 @@
 from colorama import Fore, Style, init
 
+import utils
+from player import Player
 
 init()
 
@@ -108,7 +110,7 @@ def get_player_answer(question: str, options: list[str], silent_error: bool = Fa
     if not all(options):
         raise ValueError("options must not contain empty strings.")
 
-    print("-" * len(question))
+    print("─" * len(question))
     print(question)
     answer_lines = ["", "", ""]
     for i, option in enumerate(options, start=1):
@@ -165,3 +167,187 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def closing_screen():
+    utils.clear_console()
+    ascii_art = """
+
+     ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗ 
+    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██║   ██║██╔════╝██╔══██╗
+    ██║  ███╗███████║██╔████╔██║█████╗      ██║   ██║██║   ██║█████╗  ██████╔╝
+    ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██╗
+    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ╚██████╔╝ ╚████╔╝ ███████╗██║  ██║
+     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝
+                                                                              
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⠋⠉⡉⣉⡛⣛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   THANKS FOR PLAYING
+    ⣿⣿⣿⣿⣿⣿⣿⡿⠋⠁⠄⠄⠄⠄⠄⢀⣸⣿⣿⡿⠿⡯⢙⠿⣿⣿⣿⣿⣿⣿   We hope you had fun and learned something new.
+    ⣿⣿⣿⣿⣿⣿⡿⠄⠄⠄⠄⠄⡀⡀⠄⢀⣀⣉⣉⣉⠁⠐⣶⣶⣿⣿⣿⣿⣿⣿   We had a lot of fun creating it!
+    ⣿⣿⣿⣿⣿⣿⡇⠄⠄⠄⠄⠁⣿⣿⣀⠈⠿⢟⡛⠛⣿⠛⠛⣿⣿⣿⣿⣿⣿⣿   See you again soon.
+    ⣿⣿⣿⣿⣿⣿⡆⠄⠄⠄⠄⠄⠈⠁⠰⣄⣴⡬⢵⣴⣿⣤⣽⣿⣿⣿⣿⣿⣿⣿
+    ⣿⣿⣿⣿⣿⣿⡇⠄⢀⢄⡀⠄⠄⠄⠄⡉⠻⣿⡿⠁⠘⠛⡿⣿⣿⣿⣿⣿⣿⣿      
+    ⣿⣿⣿⣿⣿⡿⠃⠄⠄⠈⠻⠄⠄⠄⠄⢘⣧⣀⠾⠿⠶⠦⢳⣿⣿⣿⣿⣿⣿⣿   Don´t eat dogs and cats!
+    ⣿⣿⣿⣿⣿⣶⣤⡀⢀⡀⠄⠄⠄⠄⠄⠄⠻⢣⣶⡒⠶⢤⢾⣿⣿⣿⣿⣿⣿⣿   
+    ⣿⣿⣿⣿⡿⠟⠋⠄⢘⣿⣦⡀⠄⠄⠄⠄⠄⠉⠛⠻⠻⠺⣼⣿⠟⠋⠛⠿⣿⣿   
+    ⠋⠉⠁⠄⠄⠄⠄⠄⠄⢻⣿⣿⣶⣄⡀⠄⠄⠄⠄⢀⣤⣾⣿⣿⡀⠄⠄⠄⠄⢹   
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⣿⣿⣿⣷⡤⠄⠰⡆⠄⠄⠈⠉⠛⠿⢦⣀⡀⡀⠄
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⢿⣿⠟⡋⠄⠄⠄⢣⠄⠄⠄⠄⠄⠄⠄⠈⠹⣿⣀                    
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠘⣷⣿⣿⣷⠄⠄⢺⣇⠄⠄⠄⠄⠄⠄⠄⠄⠸⣿                                 
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠹⣿⣿⡇⠄⠄⠸⣿⡄⠄⠈⠁⠄⠄⠄⠄⠄⣿   ____________________________________________                             
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⣿⡇⠄⠄⠄⢹⣧⠄⠄⠄⠄⠄⠄⠄⠄⠘   Creators: Dominik, Philipp, Amir, Jorge, Lea
+    """
+
+    # Print the full ASCII art
+    print(ascii_art)
+
+
+def final(players):
+    """ display graphic, final score & credits """
+
+    trophy = """
+                                                                    ...         ...
+                                                                   --..-**-- .=*-..--
+##   ##    ####   ###  ##  ###  ##  ### ###  ### ##    ## ##       --  :#+==.:**:  --
+##   ##     ##      ## ##    ## ##   ##  ##   ##  ##  ##   ##       :: :*===:=**:.::
+##   ##     ##     # ## #   # ## #   ##       ##  ##  ####            .:*==+:=**:. 
+## # ##     ##     ## ##    ## ##    ## ##    ## ##    #####           ..++*+++..
+# ### #     ##     ##  ##   ##  ##   ##       ## ##       ###             .++. 
+ ## ##      ##     ##  ##   ##  ##   ##  ##   ##  ##  ##   ##             -=:-    
+##   ##    ####   ###  ##  ###  ##  ### ###  #### ##   ## ##            .=+-:+=.   
+                                                                        .:.. .:.  
+                                                                      
+                                                                     
+"""
+    print(trophy)
+    # return trophy
+
+
+# trophy_ascii = final(players)
+# print(trophy_ascii)
+    display_podium(players)
+
+    print("\n" + Fore.YELLOW + " " * 10 + "🏆 Congratulation To All Players 🏆" + Style.RESET_ALL + "\n")
+    print(Fore.LIGHTGREEN_EX + "Thanks for playing our game!\nHope you had some fun playing it\nWe had a lot of fun creating it\n" + Style.RESET_ALL)
+    print(Fore.LIGHTGREEN_EX + "Don´t eat cats and dogs!\n" + Fore.LIGHTGREEN_EX)
+    print("____________________________________________")
+    print(Fore.LIGHTGREEN_EX + "Creators: Dominik, Philipp, Amir, Jorge, Lea, \n" + Style.RESET_ALL)
+
+
+def header():
+    utils.clear_console()
+    ascii_art = """
+    ▗▄▄▄▖ ▗▄▖  ▗▄▄▖▗▄▄▄▖     ▗▄▖ ▗▄▄▖     ▗▄▄▄▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
+    ▐▌   ▐▌ ▐▌▐▌     █      ▐▌ ▐▌▐▌ ▐▌    ▐▌   ▐▌ ▐▌▐▌▗▞▘▐▌   
+    ▐▛▀▀▘▐▛▀▜▌▐▌     █      ▐▌ ▐▌▐▛▀▚▖    ▐▛▀▀▘▐▛▀▜▌▐▛▚▖ ▐▛▀▀▘
+    ▐▌   ▐▌ ▐▌▝▚▄▄▖  █      ▝▚▄▞▘▐▌ ▐▌    ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖
+    """
+
+    # Print the ASCII art
+    print(ascii_art)
+
+
+def opening_screen():
+    utils.clear_console()
+    ascii_art = """
+    
+    ███████╗ █████╗  ██████╗████████╗██████╗ ██╗   ██╗███████╗████████╗███████╗██████╗ ███████╗
+    ██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝
+    █████╗  ███████║██║        ██║   ██████╔╝██║   ██║███████╗   ██║   █████╗  ██████╔╝███████╗
+    ██╔══╝  ██╔══██║██║        ██║   ██╔══██╗██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗╚════██║
+    ██║     ██║  ██║╚██████╗   ██║   ██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║███████║
+    ╚═╝     ╚═╝  ╚═╝ ╚═════╝   ╚═╝   ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝
+                                                                                               
+
+    ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⠋⠉⡉⣉⡛⣛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿   MAKE WIKIPEDIA TRUE AGAIN!
+    ⣿⣿⣿⣿⣿⣿⣿⡿⠋⠁⠄⠄⠄⠄⠄⢀⣸⣿⣿⡿⠿⡯⢙⠿⣿⣿⣿⣿⣿⣿   We live in uncertain times, with global crises such as climate change,
+    ⣿⣿⣿⣿⣿⣿⡿⠄⠄⠄⠄⠄⡀⡀⠄⢀⣀⣉⣉⣉⠁⠐⣶⣶⣿⣿⣿⣿⣿⣿   war, fascism and fake news. Fortunately, you can at least do something
+    ⣿⣿⣿⣿⣿⣿⡇⠄⠄⠄⠄⠁⣿⣿⣀⠈⠿⢟⡛⠛⣿⠛⠛⣿⣿⣿⣿⣿⣿⣿   about fake news here and now.
+    ⣿⣿⣿⣿⣿⣿⡆⠄⠄⠄⠄⠄⠈⠁⠰⣄⣴⡬⢵⣴⣿⣤⣽⣿⣿⣿⣿⣿⣿⣿
+    ⣿⣿⣿⣿⣿⣿⡇⠄⢀⢄⡀⠄⠄⠄⠄⡉⠻⣿⡿⠁⠘⠛⡿⣿⣿⣿⣿⣿⣿⣿   The game will present you with one or two articles from Wikipedia.
+    ⣿⣿⣿⣿⣿⡿⠃⠄⠄⠈⠻⠄⠄⠄⠄⢘⣧⣀⠾⠿⠶⠦⢳⣿⣿⣿⣿⣿⣿⣿   Unfortunately, we are not sure which of the articles are fake.
+    ⣿⣿⣿⣿⣿⣶⣤⡀⢀⡀⠄⠄⠄⠄⠄⠄⠻⢣⣶⡒⠶⢤⢾⣿⣿⣿⣿⣿⣿⣿   You have to expose the fake.
+    ⣿⣿⣿⣿⡿⠟⠋⠄⢘⣿⣦⡀⠄⠄⠄⠄⠄⠉⠛⠻⠻⠺⣼⣿⠟⠋⠛⠿⣿⣿
+    ⠋⠉⠁⠄⠄⠄⠄⠄⠄⢻⣿⣿⣶⣄⡀⠄⠄⠄⠄⢀⣤⣾⣿⣿⡀⠄⠄⠄⠄⢹   When you are ready to start press "Enter", we are counting on you!
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⣿⣿⣿⣷⡤⠄⠰⡆⠄⠄⠈⠉⠛⠿⢦⣀⡀⡀⠄
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠈⢿⣿⠟⡋⠄⠄⠄⢣⠄⠄⠄⠄⠄⠄⠄⠈⠹⣿⣀                            
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠘⣷⣿⣿⣷⠄⠄⢺⣇⠄⠄⠄⠄⠄⠄⠄⠄⠸⣿                            
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠹⣿⣿⡇⠄⠄⠸⣿⡄⠄⠈⠁⠄⠄⠄⠄⠄⣿                            
+    ⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢻⣿⡇⠄⠄⠄⢹⣧⠄⠄⠄⠄⠄⠄⠄⠄⠘
+    """
+
+    # Print the full ASCII art
+    print(ascii_art)
+
+
+    start = input('Press "Enter" to start.')
+
+
+PODIUM_COLOR = Fore.YELLOW
+
+
+def display_podium(players: dict[str, Player]):
+    """Displays a podium for the happy winners using a grid structure."""
+    sorted_scores = sorted(players.values(), key=lambda x: x.score, reverse=True)
+
+    scale_factor = 10
+    podium_info = [(player.name, player.score // scale_factor, player.score, player.color) for player in sorted_scores]
+    max_height = max(height for _, height, _, _ in podium_info)
+
+    rank_colors = [Fore.LIGHTYELLOW_EX, Fore.LIGHTWHITE_EX, Fore.YELLOW]
+    default_color = Fore.LIGHTGREEN_EX
+
+    grid = []
+    for level in range(max_height + 1):
+        row = []
+        for i, (_, height, _, _) in enumerate(podium_info):
+            color = rank_colors[i] if i < len(rank_colors) else default_color
+            if max_height - level < height:
+                row.append(color + "|      |" + Style.RESET_ALL)
+            elif max_height - level == height:
+                row.append(color + "@******@" + Style.RESET_ALL)
+            else:
+                row.append("        ")  #
+        grid.append(row)
+
+    for row in grid:
+        print("  ".join(row))
+
+    score_row = [
+        f"{color}{str(score).center(8)}{Style.RESET_ALL}"
+        for _, _, score, color in podium_info
+    ]
+    print("  ".join(score_row))
+
+    name_row = [
+        f"{color}{str(name).center(8)}{Style.RESET_ALL}"
+        for name, _, _, color in podium_info
+    ]
+    print("  ".join(name_row))
+
+
+def display_player_scores_vertically(players):
+    """ Displays each player's name, score, and stars in a vertical format """
+    for player in players.values():
+        stars = '*' * (player.score // 10)
+        print(f"{player.color}{player.name:<10}{Style.RESET_ALL} {player.score:<3} {stars}")
+
+
+def display_player_scores_horizontally(players):
+    """ Displays each player's name, score, and stars in a horizontal format """
+
+    column_width = 15
+
+    name_row = "  ".join(
+        f"{player.color}{player.name:<{column_width}}{Style.RESET_ALL}" for player in players.values()
+    )
+    score_row = "  ".join(
+        f"{player.color}{str(player.score):<{column_width}}{Style.RESET_ALL}" for player in players.values()
+    )
+    stars_row = "  ".join(
+        f"{'*' * (player.score // 10):<{column_width}}" for player in players.values()
+    )
+
+    # print("─" * (column_width * len(players)))
+    print(" " * 2, name_row)
+    print(" " * 2, score_row)
+    # print(stars_row)

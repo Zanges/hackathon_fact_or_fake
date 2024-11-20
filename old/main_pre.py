@@ -1,9 +1,10 @@
 from giorgio import get_random_article_text
 from lea import get_passage
-from phil_amir import run_question
+from game_logic import run_question
 from player import Player
-from refresh import refresh
-from header import header
+from utils import clear_console
+from pretty_print import header
+
 # from zanges import get_fake_passage
 #from validation import get_player_number, get_rounds_number
 article_text = """Donkey Kong Country[b] is a 1994 platform game developed by Rare and published by Nintendo for the Super Nintendo Entertainment System (SNES). It is a reboot of Nintendo's Donkey Kong franchise and follows the gorilla Donkey Kong and his nephew Diddy Kong as they set out to recover their stolen banana hoard from the crocodile King K. Rool and his army, the Kremlings. The single-player traverses 40 side-scrolling levels as they jump between platforms and avoid obstacles. They collect items, ride minecarts and animals, defeat enemies and bosses, and find secret bonus stages. In multiplayer modes, two players work cooperatively or race."""
@@ -19,7 +20,7 @@ def main() -> None:
     if multiplayer:
         run_multiplayer()
     else:
-        refresh()
+        clear_console()
         run_game()
 
     # process winner(players)
@@ -41,7 +42,7 @@ def run_multiplayer() -> None:
         for player in players.values():
             current_player = player
 
-            refresh()
+            clear_console()
             print(f"Round: {game_round} Player: {current_player.name}")
 
             score = run_game()
