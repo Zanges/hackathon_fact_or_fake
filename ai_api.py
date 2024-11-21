@@ -23,7 +23,7 @@ DIFFICULTIES = {
             - Prioritize concise phrasing and efficient language while maintaining clarity and formal tone.
     
             Now, rewrite the provided passage adhering strictly to the guidelines above.
-            """
+            """,
     },
     "hard": {
         "temperature": 0.5,
@@ -41,13 +41,13 @@ DIFFICULTIES = {
             - Prioritize concise phrasing and efficient language while maintaining clarity and formal tone.
     
             Now, rewrite the provided passage adhering strictly to the guidelines above.
-            """
-    }
+            """,
+    },
 }
 
 
 def get_fake_passage(passage: str, difficulty: str) -> str:
-    """ Generate a fake passage based on the provided passage and difficulty level. """
+    """Generate a fake passage based on the provided passage and difficulty level."""
     print("\nGenerating passage...\n")
     if not passage:
         raise ValueError("passage must not be empty.")
@@ -62,31 +62,20 @@ def get_fake_passage(passage: str, difficulty: str) -> str:
             {
                 "role": "system",
                 "content": [
-                    {
-                        "type": "text",
-                        "text": DIFFICULTIES[difficulty]["prompt"]
-                    }
-                ]
+                    {"type": "text", "text": DIFFICULTIES[difficulty]["prompt"]}
+                ],
             },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": passage
-                    }
-                ]
-            }
-        ]
+            {"role": "user", "content": [{"type": "text", "text": passage}]},
+        ],
     )
 
     if completion.choices[0].finish_reason == "stop":
         fake_passage = completion.choices[0].message.content
         return fake_passage
     else:
-        raise Exception(f"The completion was not successful.\n"
-                        f"DUMP:\n"
-                        f"{completion}")
+        raise Exception(
+            f"The completion was not successful.\n" f"DUMP:\n" f"{completion}"
+        )
 
 
 def main():
@@ -95,17 +84,24 @@ def main():
     dev_passage = request_wiki_categories.get_article_content(
         request_wiki_categories.get_random_valid_title(
             "List of video games considered the best"
-        ))[1]
+        )
+    )[1]
     easy_fake_passage = get_fake_passage(dev_passage, "easy")
     medium_fake_passage = get_fake_passage(dev_passage, "medium")
     hard_fake_passage = get_fake_passage(dev_passage, "hard")
     pretty_print.print_paragraph_with_linebreaks(f"Original Passage:\n{dev_passage}")
     print()
-    pretty_print.print_paragraph_with_linebreaks(f"Easy Fake Passage:\n{easy_fake_passage}")
+    pretty_print.print_paragraph_with_linebreaks(
+        f"Easy Fake Passage:\n{easy_fake_passage}"
+    )
     print()
-    pretty_print.print_paragraph_with_linebreaks(f"Medium Fake Passage:\n{medium_fake_passage}")
+    pretty_print.print_paragraph_with_linebreaks(
+        f"Medium Fake Passage:\n{medium_fake_passage}"
+    )
     print()
-    pretty_print.print_paragraph_with_linebreaks(f"Hard Fake Passage:\n{hard_fake_passage}")
+    pretty_print.print_paragraph_with_linebreaks(
+        f"Hard Fake Passage:\n{hard_fake_passage}"
+    )
 
 
 if __name__ == "__main__":

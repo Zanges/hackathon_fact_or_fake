@@ -1,7 +1,6 @@
 from colorama import Style
+
 from colors import INPUT_COLOR, ERROR_COLOR
-
-
 
 
 def get_rounds_number(max_round: int = 10) -> int:

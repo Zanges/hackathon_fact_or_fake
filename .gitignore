@@ -1,4 +1,6 @@
 .venv/
 .idea/
 
+old/
+
 .env

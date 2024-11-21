@@ -1,7 +1,7 @@
 """ Creates Player Object to store information of each Player. When a new Player is created it gets a color from COLORS.
 Every Player has a name, color, score and the possibility to cast a crash once a round"""
 
-from colorama import Fore, Style
+from colorama import Fore
 
 
 class Player:

@@ -1,10 +1,14 @@
-from colorama import Fore, Style
 import random
 
-import utils
-from colors import INPUT_COLOR, HIGHLIGHT_COLOR, GOLD_COLOR, PLAIN_HIGHLIGHT_COLOR, ERROR_COLOR
-from player import Player
+from colorama import Style
 
+from colors import (
+    INPUT_COLOR,
+    PLAIN_HIGHLIGHT_COLOR,
+    ERROR_COLOR,
+)
+from player import Player
+from utils import clear_console
 
 
 def print_paragraph_with_linebreaks(
@@ -146,15 +150,21 @@ def get_player_answer(
                 return answer - 1
             else:
                 if not silent_error:
-                    print(ERROR_COLOR + f"Choose only between 1 - {len(options)}" + Style.RESET_ALL)
+                    print(
+                        ERROR_COLOR
+                        + f"Choose only between 1 - {len(options)}"
+                        + Style.RESET_ALL
+                    )
         except ValueError:
             if not silent_error:
-                print(ERROR_COLOR + "Input must be a number. Try again!" + Style.RESET_ALL)
+                print(
+                    ERROR_COLOR + "Input must be a number. Try again!" + Style.RESET_ALL
+                )
 
 
 def closing_screen() -> None:
     """Print closing screen to terminal"""
-    utils.clear_console()
+    clear_console()
     ascii_art = """
 
      ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ██╗   ██╗███████╗██████╗ 
@@ -187,22 +197,23 @@ def closing_screen() -> None:
 
 def final(players) -> None:
     """display graphic, final score & credits"""
+    clear_console()
 
-   #  trophy = """
-   #  ...         ...
-   # --..-**-- .=*-..--
-   # --  :#+==.:**:  --
-   #  :: :*===:=**:.::
-   #    .:*==+:=**:.
-   #     ..++*+++..
-   #        .++.
-   #        -=:-
-   #      .=+-:+=.
-   #      .:.. .:.
-   #      """
-   #
-   #
-   #  print(GOLD_COLOR + trophy + Style.RESET_ALL)
+    #  trophy = """
+    #  ...         ...
+    # --..-**-- .=*-..--
+    # --  :#+==.:**:  --
+    #  :: :*===:=**:.::
+    #    .:*==+:=**:.
+    #     ..++*+++..
+    #        .++.
+    #        -=:-
+    #      .=+-:+=.
+    #      .:.. .:.
+    #      """
+    #
+    #
+    #  print(GOLD_COLOR + trophy + Style.RESET_ALL)
 
     emojis = ["🏆 ", "🎉 ", "🥳 ", "🍾 ", "⭐ "]
     emoji_str = " "
@@ -214,7 +225,11 @@ def final(players) -> None:
     display_podium(players)
 
     max_score = max(player.score for player in players.values())
-    winners = [player.color + player.name for player in players.values() if player.score == max_score]
+    winners = [
+        player.color + player.name + Style.RESET_ALL
+        for player in players.values()
+        if player.score == max_score
+    ]
     trophy_emoji = "🏆"
 
     if len(winners) == 1:
@@ -233,10 +248,9 @@ def final(players) -> None:
     print()
 
 
-
 def header() -> None:
     """Print header to article"""
-    utils.clear_console()
+    clear_console()
     ascii_art = """
     ▗▄▄▄▖ ▗▄▖  ▗▄▄▖▗▄▄▄▖     ▗▄▖ ▗▄▄▖     ▗▄▄▄▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
     ▐▌   ▐▌ ▐▌▐▌     █      ▐▌ ▐▌▐▌ ▐▌    ▐▌   ▐▌ ▐▌▐▌▗▞▘▐▌   
@@ -250,7 +264,7 @@ def header() -> None:
 
 def opening_screen() -> None:
     """Print opening screen"""
-    utils.clear_console()
+    clear_console()
     ascii_art = """
     
     ███████╗ █████╗  ██████╗████████╗██████╗ ██╗   ██╗███████╗████████╗███████╗██████╗ ███████╗
@@ -266,7 +280,7 @@ def opening_screen() -> None:
     ⣿⣿⣿⣿⣿⣿⡿⠄⠄⠄⠄⠄⡀⡀⠄⢀⣀⣉⣉⣉⠁⠐⣶⣶⣿⣿⣿⣿⣿⣿   war, fascism and fake news. Fortunately, you can at least do something
     ⣿⣿⣿⣿⣿⣿⡇⠄⠄⠄⠄⠁⣿⣿⣀⠈⠿⢟⡛⠛⣿⠛⠛⣿⣿⣿⣿⣿⣿⣿   about fake news here and now.
     ⣿⣿⣿⣿⣿⣿⡆⠄⠄⠄⠄⠄⠈⠁⠰⣄⣴⡬⢵⣴⣿⣤⣽⣿⣿⣿⣿⣿⣿⣿
-    ⣿⣿⣿⣿⣿⣿⡇⠄⢀⢄⡀⠄⠄⠄⠄⡉⠻⣿⡿⠁⠘⠛⡿⣿⣿⣿⣿⣿⣿⣿   The game will present you with one or two articles from Wikipedia.
+    ⣿⣿⣿⣿⣿⣿⡇⠄⢀⢄⡀⠄⠄⠄⠄⡉⠻⣿⡿⠁⠘⠛⡿⣿⣿⣿⣿⣿⣿⣿   The game will present you with two articles from Wikipedia.
     ⣿⣿⣿⣿⣿⡿⠃⠄⠄⠈⠻⠄⠄⠄⠄⢘⣧⣀⠾⠿⠶⠦⢳⣿⣿⣿⣿⣿⣿⣿   Unfortunately, we are not sure which of the articles are fake.
     ⣿⣿⣿⣿⣿⣶⣤⡀⢀⡀⠄⠄⠄⠄⠄⠄⠻⢣⣶⡒⠶⢤⢾⣿⣿⣿⣿⣿⣿⣿   You have to expose the fake.
     ⣿⣿⣿⣿⡿⠟⠋⠄⢘⣿⣦⡀⠄⠄⠄⠄⠄⠉⠛⠻⠻⠺⣼⣿⠟⠋⠛⠿⣿⣿

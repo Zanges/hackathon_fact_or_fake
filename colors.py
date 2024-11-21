@@ -1,4 +1,4 @@
-from colorama import Fore, init, Style
+from colorama import Fore, init
 
 init()
 
