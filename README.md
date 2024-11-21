@@ -48,9 +48,15 @@ python main.py
 ## Screenshots
 
 ![Start Screen](images/starting_screen_screenshot.jpg)
+---
 ![Options Screen](images/options_screenshot.jpg)
+---
 ![Round 4 Screen](images/round_4_screenshot.jpg)
+---
 ![Classified Screen](images/classified_screenshot.jpg)
+---
 ![Upper/Lower Screen](images/upper_lower_screenshot.jpg)
+---
 ![Podium Screen](images/podium_screenshot.jpg)
+---
 ![End Screen](images/end_screen_screenshot.jpg)
